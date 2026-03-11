@@ -7,317 +7,62 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
   :root {
-    --bg: #0d1117;
-    --surface: #161b22;
-    --surface2: #1c2330;
-    --border: #30363d;
-    --text: #e6edf3;
-    --muted: #7d8590;
-    --accent: #3fb950;
-    --accent2: #58a6ff;
-    --warn: #d29922;
-    --danger: #f85149;
-    --low: #22c55e;
-    --mid: #f59e0b;
-    --high: #ef4444;
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2330;
+    --border: #30363d; --text: #e6edf3; --muted: #7d8590;
+    --accent: #3fb950; --accent2: #58a6ff;
+    --low: #22c55e; --mid: #f59e0b; --high: #ef4444;
     --font-display: 'DM Serif Display', serif;
     --font-body: 'DM Sans', sans-serif;
     --font-mono: 'DM Mono', monospace;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 14px;
-    min-height: 100vh;
-    line-height: 1.6;
-  }
-
-  /* Grid noise overlay */
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; min-height: 100vh; line-height: 1.6; }
   body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image:
-      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px),
-      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px);
-    pointer-events: none;
-    z-index: 0;
+    content: ''; position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px);
+    pointer-events: none; z-index: 0;
   }
-
-  .container {
-    position: relative; z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
-  }
-
-  /* Header */
-  header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    animation: fadeDown 0.6s ease both;
-  }
-
-  .brand h1 {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    color: var(--text);
-  }
+  .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); animation: fadeDown 0.6s ease both; }
+  .brand h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; }
   .brand h1 em { color: var(--accent2); font-style: italic; }
-  .brand p {
-    color: var(--muted);
-    font-size: 0.82rem;
-    margin-top: 0.4rem;
-    font-family: var(--font-mono);
-    letter-spacing: 0.04em;
-  }
-
-  .status-badge {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.4rem 0.8rem;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-  }
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--muted);
-    transition: background 0.3s;
-  }
+  .brand p { color: var(--muted); font-size: 0.82rem; margin-top: 0.4rem; font-family: var(--font-mono); letter-spacing: 0.04em; }
+  .status-badge { display: flex; align-items: center; gap: 0.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.8rem; font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
   .status-dot.live { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-
-  /* Layout */
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 1.5rem;
-    align-items: start;
-  }
-
-  @media (max-width: 820px) {
-    .layout { grid-template-columns: 1fr; }
-  }
-
-  /* Card */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.5rem;
-    animation: fadeUp 0.5s ease both;
-  }
+  .layout { display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; align-items: start; }
+  @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; animation: fadeUp 0.5s ease both; }
   .card + .card { margin-top: 1rem; }
-
-  .section-label {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    color: var(--accent2);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* Form grid */
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.9rem 1.2rem;
-  }
+  .section-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; color: var(--accent2); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.2rem; }
   .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
-
   .field { display: flex; flex-direction: column; gap: 0.3rem; }
-  .field label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    font-weight: 500;
-    letter-spacing: 0.01em;
-  }
-
-  select, input[type="number"] {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    padding: 0.48rem 0.7rem;
-    font-family: var(--font-body);
-    font-size: 0.83rem;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237d8590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.7rem center;
-    padding-right: 2rem;
-  }
-
-  select:focus, input:focus {
-    border-color: var(--accent2);
-    box-shadow: 0 0 0 3px rgba(88,166,255,0.12);
-  }
-
-  /* Submit button */
-  .btn-predict {
-    width: 100%;
-    margin-top: 1.2rem;
-    padding: 0.85rem;
-    background: linear-gradient(135deg, #1f6feb, #388bfd);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-  }
+  .field label { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+  select { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 0.48rem 2rem 0.48rem 0.7rem; font-family: var(--font-body); font-size: 0.83rem; outline: none; transition: border-color 0.2s; width: 100%; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237d8590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.7rem center; }
+  select:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(88,166,255,0.12); }
+  .btn-predict { width: 100%; margin-top: 1.2rem; padding: 0.85rem; background: linear-gradient(135deg, #1f6feb, #388bfd); border: none; border-radius: 8px; color: #fff; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
   .btn-predict:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56,139,253,0.35); }
-  .btn-predict:active { transform: translateY(0); }
   .btn-predict:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: none;
-  }
-
-  /* Results panel */
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   .result-panel { position: sticky; top: 1.5rem; }
-
-  .risk-dial-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem 1rem;
-  }
-
-  .risk-dial {
-    position: relative;
-    width: 180px; height: 90px;
-    overflow: visible;
-    margin-bottom: 0.5rem;
-  }
-
-  .risk-label-center {
-    text-align: center;
-    margin-top: 0.25rem;
-  }
-  .risk-pct {
-    font-family: var(--font-display);
-    font-size: 2.4rem;
-    line-height: 1;
-  }
-  .risk-level-text {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 0.25rem;
-  }
-
-  .factor-list { margin-top: 0; }
-  .factor-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    padding: 0.55rem 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.8rem;
-    animation: fadeUp 0.3s ease both;
-  }
+  .risk-dial-wrap { display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem; }
+  .risk-dial { position: relative; width: 180px; height: 90px; overflow: visible; margin-bottom: 0.5rem; }
+  .risk-label-center { text-align: center; margin-top: 0.25rem; }
+  .risk-pct { font-family: var(--font-display); font-size: 2.4rem; line-height: 1; }
+  .risk-level-text { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.25rem; }
+  .factor-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; animation: fadeUp 0.3s ease both; }
   .factor-item:last-child { border-bottom: none; }
-  .factor-arrow {
-    width: 18px; height: 18px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+  .factor-arrow { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; margin-top: 1px; }
   .factor-arrow.up { background: rgba(239,68,68,0.15); color: var(--high); }
   .factor-arrow.down { background: rgba(34,197,94,0.15); color: var(--low); }
-
-  .recommendation-box {
-    background: var(--surface2);
-    border-left: 3px solid var(--accent2);
-    border-radius: 0 6px 6px 0;
-    padding: 0.75rem 0.9rem;
-    font-size: 0.8rem;
-    line-height: 1.55;
-    color: var(--text);
-    margin-top: 0;
-  }
-
-  .placeholder-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2.5rem 1rem;
-    text-align: center;
-    color: var(--muted);
-    gap: 0.75rem;
-  }
+  .recommendation-box { background: var(--surface2); border-left: 3px solid var(--accent2); border-radius: 0 6px 6px 0; padding: 0.75rem 0.9rem; font-size: 0.8rem; line-height: 1.55; }
+  .placeholder-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem 1rem; text-align: center; color: var(--muted); gap: 0.75rem; }
   .placeholder-state svg { opacity: 0.3; }
   .placeholder-state p { font-size: 0.8rem; line-height: 1.5; }
-
-  /* Error toast */
-  .error-toast {
-    background: rgba(248,81,73,0.1);
-    border: 1px solid rgba(248,81,73,0.3);
-    border-radius: 6px;
-    padding: 0.7rem 1rem;
-    color: var(--danger);
-    font-size: 0.8rem;
-    margin-top: 0.75rem;
-    display: none;
-  }
-
-  .disclaimer {
-    font-size: 0.7rem;
-    color: var(--muted);
-    line-height: 1.5;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    font-family: var(--font-mono);
-  }
-
+  .error-toast { background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; padding: 0.7rem 1rem; color: var(--high); font-size: 0.8rem; margin-top: 0.75rem; display: none; }
+  .disclaimer { font-size: 0.7rem; color: var(--muted); line-height: 1.5; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-family: var(--font-mono); }
   @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:none; } }
   @keyframes fadeUp   { from { opacity:0; transform:translateY(10px);  } to { opacity:1; transform:none; } }
   @keyframes spin     { to { transform: rotate(360deg); } }
@@ -325,7 +70,6 @@
 </head>
 <body>
 <div class="container">
-
   <header>
     <div class="brand">
       <h1>OUD Dropout <em>Risk</em> Predictor</h1>
@@ -338,47 +82,41 @@
   </header>
 
   <div class="layout">
-
-    <!-- LEFT: Form -->
     <div>
-
       <!-- Demographics -->
       <div class="card" style="animation-delay:0.05s">
         <div class="section-label">Demographics</div>
         <div class="form-grid">
           <div class="field">
-            <label>Age Category</label>
-            <select id="age_category">
-              <option value="1">12–14</option><option value="2">15–17</option>
-              <option value="3">18–20</option><option value="4">21–24</option>
-              <option value="5" selected>25–29</option><option value="6">30–34</option>
-              <option value="7">35–39</option><option value="8">40–44</option>
-              <option value="9">45–49</option><option value="10">50–54</option>
-              <option value="11">55–64</option><option value="12">65+</option>
+            <label>Age Category (AGECAT)</label>
+            <select id="AGECAT">
+              <option value="1">12–14</option><option value="2">15–24</option>
+              <option value="3" selected>25–34</option><option value="4">35–44</option>
+              <option value="5">45–54</option><option value="6">55–64</option>
+              <option value="7">65+</option>
             </select>
           </div>
           <div class="field">
-            <label>Gender</label>
-            <select id="gender">
+            <label>Gender (GENDER)</label>
+            <select id="GENDER">
               <option value="1">Male</option>
               <option value="2">Female</option>
             </select>
           </div>
           <div class="field">
-            <label>Race / Ethnicity</label>
-            <select id="race">
+            <label>Race (RACE)</label>
+            <select id="RACE">
               <option value="1">Alaska Native / Am. Indian</option>
               <option value="2">Asian / Pacific Islander</option>
               <option value="3">Black / African American</option>
               <option value="4" selected>White</option>
               <option value="5">Hispanic / Latino</option>
-              <option value="6">Two or more races</option>
-              <option value="7">Other</option>
+              <option value="6">Other / Two or more</option>
             </select>
           </div>
           <div class="field">
-            <label>Education</label>
-            <select id="education">
+            <label>Education (EDUC)</label>
+            <select id="EDUC">
               <option value="1">Less than 8th grade</option>
               <option value="2">8th–11th grade</option>
               <option value="3" selected>HS diploma / GED</option>
@@ -387,8 +125,8 @@
             </select>
           </div>
           <div class="field">
-            <label>Employment Status</label>
-            <select id="employment">
+            <label>Employment (EMPLOY)</label>
+            <select id="EMPLOY">
               <option value="1">Full-time</option>
               <option value="2">Part-time</option>
               <option value="3" selected>Unemployed</option>
@@ -396,8 +134,8 @@
             </select>
           </div>
           <div class="field">
-            <label>Living Arrangement</label>
-            <select id="living_arrangement">
+            <label>Living Arrangement (LIVARAG)</label>
+            <select id="LIVARAG">
               <option value="1">Homeless / shelter</option>
               <option value="2">Dependent (with family)</option>
               <option value="3" selected>Independent</option>
@@ -406,61 +144,25 @@
         </div>
       </div>
 
-      <!-- Substance Use -->
-      <div class="card" style="animation-delay:0.1s">
-        <div class="section-label">Substance Use</div>
-        <div class="form-grid">
-          <div class="field">
-            <label>Primary Substance</label>
-            <select id="primary_substance">
-              <option value="2">Alcohol</option>
-              <option value="5" selected>Heroin</option>
-              <option value="6">Other opiates / synthetics</option>
-              <option value="7">Other drugs</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Route of Administration</label>
-            <select id="route_of_admin">
-              <option value="1">Oral</option>
-              <option value="2">Smoking</option>
-              <option value="3">Inhalation</option>
-              <option value="4" selected>Injection</option>
-              <option value="5">Other</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Frequency of Use</label>
-            <select id="frequency_of_use">
-              <option value="1">No past-month use</option>
-              <option value="2">1–3 times / month</option>
-              <option value="3">1–2 times / week</option>
-              <option value="4">3–6 times / week</option>
-              <option value="5" selected>Daily</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Age at First Use</label>
-            <select id="age_first_use">
-              <option value="1">11 or younger</option>
-              <option value="2">12–14</option>
-              <option value="3">15–17</option>
-              <option value="4" selected>18–20</option>
-              <option value="5">21–24</option>
-              <option value="6">25–29</option>
-              <option value="7">30 or older</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
       <!-- Treatment -->
-      <div class="card" style="animation-delay:0.15s">
-        <div class="section-label">Treatment History</div>
+      <div class="card" style="animation-delay:0.1s">
+        <div class="section-label">Treatment</div>
         <div class="form-grid three">
           <div class="field">
-            <label>Prior Treatment Episodes</label>
-            <select id="prior_treatment_episodes">
+            <label>Service Setting (SERVICES)</label>
+            <select id="SERVICES">
+              <option value="1">Detox (hospital)</option>
+              <option value="2">Detox (free-standing)</option>
+              <option value="3">Rehab / Residential (hosp)</option>
+              <option value="4">Rehab / Residential</option>
+              <option value="5">Ambulatory intensive</option>
+              <option value="6" selected>Outpatient</option>
+              <option value="7">Opioid treatment prog (OTP)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Prior Episodes (NOPRIOR)</label>
+            <select id="NOPRIOR">
               <option value="0" selected>None</option>
               <option value="1">1 prior</option>
               <option value="2">2 prior</option>
@@ -470,58 +172,82 @@
             </select>
           </div>
           <div class="field">
-            <label>Service Setting</label>
-            <select id="service_setting">
-              <option value="1">Detox (hospital)</option>
-              <option value="2">Detox (free-standing)</option>
-              <option value="3">Rehab / Residential (hosp)</option>
-              <option value="4">Rehab / Residential</option>
-              <option value="5">Ambulatory intensive</option>
-              <option value="6" selected>Outpatient</option>
-              <option value="7">OTP (Opioid treatment prog.)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Medication-Assisted Tx</label>
-            <select id="medication_assisted">
-              <option value="0">None</option>
-              <option value="1">Methadone</option>
-              <option value="2" selected>Buprenorphine</option>
-              <option value="3">Naltrexone</option>
-              <option value="4">Other MAT</option>
+            <label>Referral Source (PSOURCE)</label>
+            <select id="PSOURCE">
+              <option value="1">Individual</option>
+              <option value="2">Alcohol / drug abuse provider</option>
+              <option value="3" selected>Other health care provider</option>
+              <option value="4">School</option>
+              <option value="5">Employer / EAP</option>
+              <option value="6">Other community referral</option>
+              <option value="7">Court / criminal justice</option>
             </select>
           </div>
         </div>
+      </div>
 
-        <div class="form-grid" style="margin-top:0.9rem; grid-template-columns: 1fr 1fr;">
+      <!-- Clinical -->
+      <div class="card" style="animation-delay:0.15s">
+        <div class="section-label">Clinical Factors</div>
+        <div class="form-grid">
           <div class="field">
-            <label>State (FIPS Code)</label>
-            <select id="state_fips">
-              <option value="1">Alabama (01)</option><option value="2">Alaska (02)</option>
-              <option value="4">Arizona (04)</option><option value="5">Arkansas (05)</option>
-              <option value="6">California (06)</option><option value="8">Colorado (08)</option>
-              <option value="9">Connecticut (09)</option><option value="10">Delaware (10)</option>
-              <option value="12">Florida (12)</option><option value="13">Georgia (13)</option>
-              <option value="15">Hawaii (15)</option><option value="16">Idaho (16)</option>
-              <option value="17">Illinois (17)</option><option value="18">Indiana (18)</option>
-              <option value="19">Iowa (19)</option><option value="20">Kansas (20)</option>
-              <option value="21">Kentucky (21)</option><option value="22">Louisiana (22)</option>
-              <option value="23">Maine (23)</option><option value="24">Maryland (24)</option>
-              <option value="25">Massachusetts (25)</option><option value="26">Michigan (26)</option>
-              <option value="27">Minnesota (27)</option><option value="28">Mississippi (28)</option>
-              <option value="29">Missouri (29)</option><option value="30">Montana (30)</option>
-              <option value="31">Nebraska (31)</option><option value="32">Nevada (32)</option>
-              <option value="33">New Hampshire (33)</option><option value="34">New Jersey (34)</option>
-              <option value="35">New Mexico (35)</option><option value="36" selected>New York (36)</option>
-              <option value="37">North Carolina (37)</option><option value="38">North Dakota (38)</option>
-              <option value="39">Ohio (39)</option><option value="40">Oklahoma (40)</option>
-              <option value="41">Oregon (41)</option><option value="42">Pennsylvania (42)</option>
-              <option value="44">Rhode Island (44)</option><option value="45">South Carolina (45)</option>
-              <option value="46">South Dakota (46)</option><option value="47">Tennessee (47)</option>
-              <option value="48">Texas (48)</option><option value="49">Utah (49)</option>
-              <option value="50">Vermont (50)</option><option value="51">Virginia (51)</option>
-              <option value="53">Washington (53)</option><option value="54">West Virginia (54)</option>
-              <option value="55">Wisconsin (55)</option><option value="56">Wyoming (56)</option>
+            <label>Co-occurring Mental Disorder (PSYPROB)</label>
+            <select id="PSYPROB">
+              <option value="1">Yes</option>
+              <option value="2" selected>No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Injection Drug Use (NEEDLEUSE)</label>
+            <select id="NEEDLEUSE">
+              <option value="1">Yes</option>
+              <option value="2" selected>No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Arrests Past 30 Days (ARRESTS)</label>
+            <select id="ARRESTS">
+              <option value="0" selected>None</option>
+              <option value="1">Once</option>
+              <option value="2">Two or more</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Number of Substances (NUMSUBS)</label>
+            <select id="NUMSUBS">
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>State (STFIPS)</label>
+            <select id="STFIPS">
+              <option value="1">Alabama</option><option value="2">Alaska</option>
+              <option value="4">Arizona</option><option value="5">Arkansas</option>
+              <option value="6">California</option><option value="8">Colorado</option>
+              <option value="9">Connecticut</option><option value="10">Delaware</option>
+              <option value="12">Florida</option><option value="13">Georgia</option>
+              <option value="15">Hawaii</option><option value="16">Idaho</option>
+              <option value="17">Illinois</option><option value="18">Indiana</option>
+              <option value="19">Iowa</option><option value="20">Kansas</option>
+              <option value="21">Kentucky</option><option value="22">Louisiana</option>
+              <option value="23">Maine</option><option value="24">Maryland</option>
+              <option value="25">Massachusetts</option><option value="26">Michigan</option>
+              <option value="27">Minnesota</option><option value="28">Mississippi</option>
+              <option value="29">Missouri</option><option value="30">Montana</option>
+              <option value="31">Nebraska</option><option value="32">Nevada</option>
+              <option value="33">New Hampshire</option><option value="34">New Jersey</option>
+              <option value="35">New Mexico</option><option value="36" selected>New York</option>
+              <option value="37">North Carolina</option><option value="38">North Dakota</option>
+              <option value="39">Ohio</option><option value="40">Oklahoma</option>
+              <option value="41">Oregon</option><option value="42">Pennsylvania</option>
+              <option value="44">Rhode Island</option><option value="45">South Carolina</option>
+              <option value="46">South Dakota</option><option value="47">Tennessee</option>
+              <option value="48">Texas</option><option value="49">Utah</option>
+              <option value="50">Vermont</option><option value="51">Virginia</option>
+              <option value="53">Washington</option><option value="54">West Virginia</option>
+              <option value="55">Wisconsin</option><option value="56">Wyoming</option>
             </select>
           </div>
         </div>
@@ -531,18 +257,12 @@
         <div class="spinner" id="spinner"></div>
         <span id="btnText">Generate Dropout Risk Prediction</span>
       </button>
-
       <div class="error-toast" id="errorToast"></div>
-
-      <p class="disclaimer">
-        ⚠ This tool is for research and educational purposes only (Team 3 · Deep Learning course).
-        Not for clinical use. Predictions are probabilistic estimates based on SAMHSA TEDS-D 2018 data.
-      </p>
+      <p class="disclaimer">⚠ For research and educational purposes only (Team 3 · Deep Learning course). Not for clinical use.</p>
     </div>
 
     <!-- RIGHT: Results -->
     <div class="result-panel">
-
       <div class="card">
         <div class="section-label">Risk Assessment</div>
         <div id="resultArea">
@@ -554,17 +274,14 @@
           </div>
         </div>
       </div>
-
-      <div class="card" id="factorCard" style="display:none; animation-delay:0.05s">
+      <div class="card" id="factorCard" style="display:none">
         <div class="section-label">Contributing Factors</div>
-        <div class="factor-list" id="factorList"></div>
+        <div id="factorList"></div>
       </div>
-
-      <div class="card" id="recCard" style="display:none; animation-delay:0.1s">
+      <div class="card" id="recCard" style="display:none">
         <div class="section-label">Clinical Recommendation</div>
         <div class="recommendation-box" id="recBox"></div>
       </div>
-
     </div>
   </div>
 </div>
@@ -598,20 +315,20 @@ async function predict() {
   errorToast.style.display = "none";
 
   const payload = {
-    age_category: val("age_category"),
-    gender: val("gender"),
-    race: val("race"),
-    education: val("education"),
-    employment: val("employment"),
-    living_arrangement: val("living_arrangement"),
-    primary_substance: val("primary_substance"),
-    route_of_admin: val("route_of_admin"),
-    frequency_of_use: val("frequency_of_use"),
-    age_first_use: val("age_first_use"),
-    prior_treatment_episodes: val("prior_treatment_episodes"),
-    service_setting: val("service_setting"),
-    medication_assisted: val("medication_assisted"),
-    state_fips: val("state_fips"),
+    SERVICES:  val("SERVICES"),
+    NOPRIOR:   val("NOPRIOR"),
+    PSYPROB:   val("PSYPROB"),
+    LIVARAG:   val("LIVARAG"),
+    EMPLOY:    val("EMPLOY"),
+    ARRESTS:   val("ARRESTS"),
+    NEEDLEUSE: val("NEEDLEUSE"),
+    AGECAT:    val("AGECAT"),
+    PSOURCE:   val("PSOURCE"),
+    NUMSUBS:   val("NUMSUBS"),
+    GENDER:    val("GENDER"),
+    RACE:      val("RACE"),
+    EDUC:      val("EDUC"),
+    STFIPS:    val("STFIPS"),
   };
 
   try {
@@ -636,9 +353,7 @@ async function predict() {
 function renderResult(data) {
   const pct = Math.round(data.dropout_probability * 100);
   const color = data.risk_color;
-
-  // SVG semi-circle gauge
-  const angle = (data.dropout_probability * 180) - 90; // -90 to 90 deg
+  const angle = (data.dropout_probability * 180) - 90;
   const rad = (angle * Math.PI) / 180;
   const cx = 90, cy = 90, r = 70;
   const nx = cx + r * Math.cos(rad);
@@ -654,46 +369,34 @@ function renderResult(data) {
             <stop offset="100%" stop-color="#ef4444"/>
           </linearGradient>
         </defs>
-        <!-- Track -->
         <path d="M10,90 A80,80 0 0,1 170,90" fill="none" stroke="#30363d" stroke-width="10" stroke-linecap="round"/>
-        <!-- Colored arc -->
         <path d="M10,90 A80,80 0 0,1 170,90" fill="none" stroke="url(#arcGrad)" stroke-width="10" stroke-linecap="round"
-              stroke-dasharray="${Math.PI * 80 * data.dropout_probability}, ${Math.PI * 80 * (1 - data.dropout_probability) + 10}"
-              stroke-dashoffset="0"/>
-        <!-- Needle -->
+              stroke-dasharray="${Math.PI * 80 * data.dropout_probability}, ${Math.PI * 80 * (1 - data.dropout_probability) + 10}"/>
         <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>
         <circle cx="${cx}" cy="${cy}" r="5" fill="${color}"/>
-        <!-- Labels -->
         <text x="10" y="88" fill="#7d8590" font-size="9" font-family="DM Mono,monospace">0%</text>
         <text x="155" y="88" fill="#7d8590" font-size="9" font-family="DM Mono,monospace">100%</text>
       </svg>
       <div class="risk-label-center">
         <div class="risk-pct" style="color:${color}">${pct}%</div>
         <div class="risk-level-text" style="color:${color}">${data.risk_level}</div>
+        ${data.demo_mode ? '<div style="font-size:0.65rem;color:#7d8590;margin-top:4px">demo mode</div>' : ''}
       </div>
     </div>`;
 
-  // Factors
-  const factorCard = document.getElementById("factorCard");
-  const factorList = document.getElementById("factorList");
   if (data.top_factors && data.top_factors.length > 0) {
-    factorList.innerHTML = data.top_factors.map((f, i) => `
+    document.getElementById("factorList").innerHTML = data.top_factors.map((f, i) => `
       <div class="factor-item" style="animation-delay:${i*0.06}s">
-        <span class="factor-arrow ${f.direction === 'increase' ? 'up' : 'down'}">
-          ${f.direction === 'increase' ? '↑' : '↓'}
-        </span>
+        <span class="factor-arrow ${f.direction === 'increase' ? 'up' : 'down'}">${f.direction === 'increase' ? '↑' : '↓'}</span>
         <span>${f.factor}</span>
       </div>`).join("");
-    factorCard.style.display = "block";
+    document.getElementById("factorCard").style.display = "block";
   }
 
-  // Recommendation
-  const recCard = document.getElementById("recCard");
   document.getElementById("recBox").textContent = data.recommendation;
-  recCard.style.display = "block";
+  document.getElementById("recCard").style.display = "block";
 }
 
-// Allow Enter key submit
 document.addEventListener("keydown", e => {
   if (e.key === "Enter" && !document.getElementById("predictBtn").disabled) predict();
 });
