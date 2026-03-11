@@ -1,5 +1,6 @@
+# Health Analytics Project
 # OUD Dropout Risk Predictor — Full-Stack Web App
-**Team 3 · Deep Learning Course · SAMHSA TEDS-D 2018**
+**Deep Learning Course- Dataset - SAMHSA TEDS-D 2018**
 
 ## Project Structure
 ```
@@ -22,24 +23,22 @@ cd oud_app
 pip install -r requirements.txt
 ```
 
-### 2. Export the trained pipeline from your notebook
+### 2. Export the trained pipeline from colab notebook
 The app needs the **full sklearn Pipeline** (preprocessor + XGBoost), not just the model.
-Save it as `xgboost_pipeline.pkl` in the `oud_app/` folder:
+This was Saved as `xgboost_pipeline.pkl` in the `oud_app/` folder:
 
 ```python
-# In your notebook, after Section 3 has run:
+# In the colab notebook, after Section 3 has run:
 import pickle
 with open("xgboost_pipeline.pkl", "wb") as f:
     pickle.dump(best_pipes["XGBoost"], f)
 ```
+> To download the .pkl file
 
-> **Why the full Pipeline?** Your notebook wraps preprocessing (imputation, scaling, OHE)
+> **Why the full Pipeline?** Colab notebook wraps preprocessing (imputation, scaling, OHE)
 > and XGBoost into a single `Pipeline(["pre", preprocessor], ["clf", XGBClassifier])`.
 > Pickling the whole Pipeline means the API just calls `pipeline.predict_proba(X_raw_df)`
 > with a raw DataFrame — no manual preprocessing needed.
-
-> **No model file?** The app runs in **demo mode** using a heuristic — all UI features
-> still work, predictions just come from rules instead of XGBoost.
 
 ### 3. Run the server
 ```bash
@@ -122,10 +121,10 @@ curl -X POST http://localhost:8000/predict \
 
 ## Customization Tips
 
-- **Different feature order?** Update `build_feature_vector()` in `app.py` to match exactly how your notebook preprocessed data before fitting.
-- **Scaling/encoding?** If your pipeline included a scaler or encoder, wrap the model in a `Pipeline` before pickling, or apply transforms in `build_feature_vector()`.
+- **Different feature order?** Update `build_feature_vector()` in `app.py` to match exactly how colab notebook preprocessed data before fitting.
+- **Scaling/encoding?** If colab pipeline included a scaler or encoder, wrap the model in a `Pipeline` before pickling, or apply transforms in `build_feature_vector()`.
 - **CORS for deployment**: The app allows all origins by default. Restrict this for production.
 
 ## Model File
-The trained XGBoost pipeline is not included in this repo.
-Download it here: [xgboost_pipeline.pkl]- https://drive.google.com/file/d/1YeUCJEqPboyYCrb39bAPhWfos_1IjVR-/view?usp=drive_link
+The trained XGBoost pipeline is included in this repo.
+it can also be downloaded from here: [xgboost_pipeline.pkl]- https://drive.google.com/file/d/1YeUCJEqPboyYCrb39bAPhWfos_1IjVR-/view?usp=drive_link
