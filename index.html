@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OUD Dropout Risk Predictor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2330;
+    --border: #30363d; --text: #e6edf3; --muted: #7d8590;
+    --accent: #3fb950; --accent2: #58a6ff;
+    --low: #22c55e; --mid: #f59e0b; --high: #ef4444;
+    --font-display: 'DM Serif Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; min-height: 100vh; line-height: 1.6; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px);
+    pointer-events: none; z-index: 0;
+  }
+  .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); animation: fadeDown 0.6s ease both; }
+  .brand h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; }
+  .brand h1 em { color: var(--accent2); font-style: italic; }
+  .brand p { color: var(--muted); font-size: 0.82rem; margin-top: 0.4rem; font-family: var(--font-mono); letter-spacing: 0.04em; }
+  .status-badge { display: flex; align-items: center; gap: 0.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.8rem; font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
+  .status-dot.live { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .layout { display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; align-items: start; }
+  @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; animation: fadeUp 0.5s ease both; }
+  .card + .card { margin-top: 1rem; }
+  .section-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; color: var(--accent2); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.2rem; }
+  .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 0.3rem; }
+  .field label { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+  select { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 0.48rem 2rem 0.48rem 0.7rem; font-family: var(--font-body); font-size: 0.83rem; outline: none; transition: border-color 0.2s; width: 100%; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237d8590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.7rem center; }
+  select:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(88,166,255,0.12); }
+  .btn-predict { width: 100%; margin-top: 1.2rem; padding: 0.85rem; background: linear-gradient(135deg, #1f6feb, #388bfd); border: none; border-radius: 8px; color: #fff; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+  .btn-predict:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56,139,253,0.35); }
+  .btn-predict:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  .result-panel { position: sticky; top: 1.5rem; }
+  .risk-dial-wrap { display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem; }
+  .risk-dial { position: relative; width: 180px; height: 90px; overflow: visible; margin-bottom: 0.5rem; }
+  .risk-label-center { text-align: center; margin-top: 0.25rem; }
+  .risk-pct { font-family: var(--font-display); font-size: 2.4rem; line-height: 1; }
+  .risk-level-text { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.25rem; }
+  .factor-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; animation: fadeUp 0.3s ease both; }
+  .factor-item:last-child { border-bottom: none; }
+  .factor-arrow { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; margin-top: 1px; }
+  .factor-arrow.up { background: rgba(239,68,68,0.15); color: var(--high); }
+  .factor-arrow.down { background: rgba(34,197,94,0.15); color: var(--low); }
+  .recommendation-box { background: var(--surface2); border-left: 3px solid var(--accent2); border-radius: 0 6px 6px 0; padding: 0.75rem 0.9rem; font-size: 0.8rem; line-height: 1.55; }
+  .placeholder-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem 1rem; text-align: center; color: var(--muted); gap: 0.75rem; }
+  .placeholder-state svg { opacity: 0.3; }
+  .placeholder-state p { font-size: 0.8rem; line-height: 1.5; }
+  .error-toast { background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; padding: 0.7rem 1rem; color: var(--high); font-size: 0.8rem; margin-top: 0.75rem; display: none; }
+  .disclaimer { font-size: 0.7rem; color: var(--muted); line-height: 1.5; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-family: var(--font-mono); }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:none; } }
+  @keyframes fadeUp   { from { opacity:0; transform:translateY(10px);  } to { opacity:1; transform:none; } }
+  @keyframes spin     { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="brand">
+      <h1>OUD Dropout <em>Risk</em> Predictor</h1>
+      <p>SAMHSA TEDS-D 2018 · XGBoost Model · Project in Deep Learning</p>
+    </div>
+    <div class="status-badge">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">connecting…</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div>
+      <!-- Demographics -->
+      <div class="card" style="animation-delay:0.05s">
+        <div class="section-label">Demographics</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Age Category (AGECAT)</label>
+            <select id="AGECAT">
+              <option value="1">12–14</option><option value="2">15–24</option>
+              <option value="3" selected>25–34</option><option value="4">35–44</option>
+              <option value="5">45–54</option><option value="6">55–64</option>
+              <option value="7">65+</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Gender (GENDER)</label>
+            <select id="GENDER">
+              <option value="1">Male</option>
+              <option value="2">Female</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Race (RACE)</label>
+            <select id="RACE">
+              <option value="1">Alaska Native / Am. Indian</option>
+              <option value="2">Asian / Pacific Islander</option>
+              <option value="3">Black / African American</option>
+              <option value="4" selected>White</option>
+              <option value="5">Hispanic / Latino</option>
+              <option value="6">Other / Two or more</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Education (EDUC)</label>
+            <select id="EDUC">
+              <option value="1">Less than 8th grade</option>
+              <option value="2">8th–11th grade</option>
+              <option value="3" selected>HS diploma / GED</option>
+              <option value="4">Some college</option>
+              <option value="5">College graduate</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Employment (EMPLOY)</label>
+            <select id="EMPLOY">
+              <option value="1">Full-time</option>
+              <option value="2">Part-time</option>
+              <option value="3" selected>Unemployed</option>
+              <option value="4">Not in labor force</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Living Arrangement (LIVARAG)</label>
+            <select id="LIVARAG">
+              <option value="1">Homeless / shelter</option>
+              <option value="2">Dependent (with family)</option>
+              <option value="3" selected>Independent</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Treatment -->
+      <div class="card" style="animation-delay:0.1s">
+        <div class="section-label">Treatment</div>
+        <div class="form-grid three">
+          <div class="field">
+            <label>Service Setting (SERVICES)</label>
+            <select id="SERVICES">
+              <option value="1">Detox (hospital)</option>
+              <option value="2">Detox (free-standing)</option>
+              <option value="3">Rehab / Residential (hosp)</option>
+              <option value="4">Rehab / Residential</option>
+              <option value="5">Ambulatory intensive</option>
+              <option value="6" selected>Outpatient</option>
+              <option value="7">Opioid treatment prog (OTP)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Prior Episodes (NOPRIOR)</label>
+            <select id="NOPRIOR">
+              <option value="0" selected>None</option>
+              <option value="1">1 prior</option>
+              <option value="2">2 prior</option>
+              <option value="3">3–5 prior</option>
+              <option value="4">6–10 prior</option>
+              <option value="5">11 or more</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Referral Source (PSOURCE)</label>
+            <select id="PSOURCE">
+              <option value="1">Individual</option>
+              <option value="2">Alcohol / drug abuse provider</option>
+              <option value="3" selected>Other health care provider</option>
+              <option value="4">School</option>
+              <option value="5">Employer / EAP</option>
+              <option value="6">Other community referral</option>
+              <option value="7">Court / criminal justice</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clinical -->
+      <div class="card" style="animation-delay:0.15s">
+        <div class="section-label">Clinical Factors</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Co-occurring Mental Disorder (PSYPROB)</label>
+            <select id="PSYPROB">
+              <option value="1">Yes</option>
+              <option value="2" selected>No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Injection Drug Use (NEEDLEUSE)</label>
+            <select id="NEEDLEUSE">
+              <option value="1">Yes</option>
+              <option value="2" selected>No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Arrests Past 30 Days (ARRESTS)</label>
+            <select id="ARRESTS">
+              <option value="0" selected>None</option>
+              <option value="1">Once</option>
+              <option value="2">Two or more</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Number of Substances (NUMSUBS)</label>
+            <select id="NUMSUBS">
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>State (STFIPS)</label>
+            <select id="STFIPS">
+              <option value="1">Alabama</option><option value="2">Alaska</option>
+              <option value="4">Arizona</option><option value="5">Arkansas</option>
+              <option value="6">California</option><option value="8">Colorado</option>
+              <option value="9">Connecticut</option><option value="10">Delaware</option>
+              <option value="12">Florida</option><option value="13">Georgia</option>
+              <option value="15">Hawaii</option><option value="16">Idaho</option>
+              <option value="17">Illinois</option><option value="18">Indiana</option>
+              <option value="19">Iowa</option><option value="20">Kansas</option>
+              <option value="21">Kentucky</option><option value="22">Louisiana</option>
+              <option value="23">Maine</option><option value="24">Maryland</option>
+              <option value="25">Massachusetts</option><option value="26">Michigan</option>
+              <option value="27">Minnesota</option><option value="28">Mississippi</option>
+              <option value="29">Missouri</option><option value="30">Montana</option>
+              <option value="31">Nebraska</option><option value="32">Nevada</option>
+              <option value="33">New Hampshire</option><option value="34">New Jersey</option>
+              <option value="35">New Mexico</option><option value="36" selected>New York</option>
+              <option value="37">North Carolina</option><option value="38">North Dakota</option>
+              <option value="39">Ohio</option><option value="40">Oklahoma</option>
+              <option value="41">Oregon</option><option value="42">Pennsylvania</option>
+              <option value="44">Rhode Island</option><option value="45">South Carolina</option>
+              <option value="46">South Dakota</option><option value="47">Tennessee</option>
+              <option value="48">Texas</option><option value="49">Utah</option>
+              <option value="50">Vermont</option><option value="51">Virginia</option>
+              <option value="53">Washington</option><option value="54">West Virginia</option>
+              <option value="55">Wisconsin</option><option value="56">Wyoming</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-predict" id="predictBtn" onclick="predict()">
+        <div class="spinner" id="spinner"></div>
+        <span id="btnText">Generate Dropout Risk Prediction</span>
+      </button>
+      <div class="error-toast" id="errorToast"></div>
+      <p class="disclaimer">⚠ For research and educational purposes only (Healthcare Analytics Project · Deep Learning course). Not for clinical use.</p>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div class="result-panel">
+      <div class="card">
+        <div class="section-label">Risk Assessment</div>
+        <div id="resultArea">
+          <div class="placeholder-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+            </svg>
+            <p>Fill in the patient profile and click <strong>Generate</strong> to see the dropout risk estimate.</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="factorCard" style="display:none">
+        <div class="section-label">Contributing Factors</div>
+        <div id="factorList"></div>
+      </div>
+      <div class="card" id="recCard" style="display:none">
+        <div class="section-label">Clinical Recommendation</div>
+        <div class="recommendation-box" id="recBox"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+async function checkHealth() {
+  try {
+    const r = await fetch(API + "/health");
+    const d = await r.json();
+    document.getElementById("statusDot").className = "status-dot live";
+    document.getElementById("statusText").textContent = d.model_loaded ? "model loaded" : "demo mode";
+  } catch {
+    document.getElementById("statusText").textContent = "api offline";
+  }
+}
+checkHealth();
+
+function val(id) { return parseInt(document.getElementById(id).value); }
+
+async function predict() {
+  const btn = document.getElementById("predictBtn");
+  const spinner = document.getElementById("spinner");
+  const btnText = document.getElementById("btnText");
+  const errorToast = document.getElementById("errorToast");
+
+  btn.disabled = true;
+  spinner.style.display = "block";
+  btnText.textContent = "Analyzing…";
+  errorToast.style.display = "none";
+
+  const payload = {
+    SERVICES:  val("SERVICES"),
+    NOPRIOR:   val("NOPRIOR"),
+    PSYPROB:   val("PSYPROB"),
+    LIVARAG:   val("LIVARAG"),
+    EMPLOY:    val("EMPLOY"),
+    ARRESTS:   val("ARRESTS"),
+    NEEDLEUSE: val("NEEDLEUSE"),
+    AGECAT:    val("AGECAT"),
+    PSOURCE:   val("PSOURCE"),
+    NUMSUBS:   val("NUMSUBS"),
+    GENDER:    val("GENDER"),
+    RACE:      val("RACE"),
+    EDUC:      val("EDUC"),
+    STFIPS:    val("STFIPS"),
+  };
+
+  try {
+    const res = await fetch(API + "/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error("API error " + res.status);
+    const data = await res.json();
+    renderResult(data);
+  } catch (err) {
+    errorToast.style.display = "block";
+    errorToast.textContent = "⚠ Could not reach the API. Make sure the backend is running on port 8000.";
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = "none";
+    btnText.textContent = "Generate Dropout Risk Prediction";
+  }
+}
+
+function renderResult(data) {
+  const pct = Math.round(data.dropout_probability * 100);
+  const color = data.risk_color;
+  const angleDeg = 180 - (data.dropout_probability * 180);
+  const rad = (angleDeg * Math.PI) / 180;
+  const cx = 90, cy = 90, r = 65;
+  const nx = cx + r * Math.cos(rad);
+  const ny = cy - r * Math.sin(rad);
+
+  document.getElementById("resultArea").innerHTML = `
+    <div class="risk-dial-wrap">
+      <svg class="risk-dial" viewBox="0 0 180 95" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#22c55e"/>
+            <stop offset="50%" stop-color="#f59e0b"/>
+            <stop offset="100%" stop-color="#ef4444"/>
+          </linearGradient>
+        </defs>
+        <path d="M10,90 A80,80 0 0,1 170,90" fill="none" stroke="#30363d" stroke-width="10" stroke-linecap="round"/>
+        <path d="M10,90 A80,80 0 0,1 170,90" fill="none" stroke="url(#arcGrad)" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="${Math.PI * 80 * data.dropout_probability}, ${Math.PI * 80 * (1 - data.dropout_probability) + 10}"/>
+        <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="${cx}" cy="${cy}" r="5" fill="${color}"/>
+        <text x="10" y="88" fill="#7d8590" font-size="9" font-family="DM Mono,monospace">0%</text>
+        <text x="155" y="88" fill="#7d8590" font-size="9" font-family="DM Mono,monospace">100%</text>
+      </svg>
+      <div class="risk-label-center">
+        <div class="risk-pct" style="color:${color}">${pct}%</div>
+        <div class="risk-level-text" style="color:${color}">${data.risk_level}</div>
+        ${data.demo_mode ? '<div style="font-size:0.65rem;color:#7d8590;margin-top:4px">demo mode</div>' : ''}
+      </div>
+    </div>`;
+
+  if (data.top_factors && data.top_factors.length > 0) {
+    document.getElementById("factorList").innerHTML = data.top_factors.map((f, i) => `
+      <div class="factor-item" style="animation-delay:${i*0.06}s">
+        <span class="factor-arrow ${f.direction === 'increase' ? 'up' : 'down'}">${f.direction === 'increase' ? '↑' : '↓'}</span>
+        <span>${f.factor}</span>
+      </div>`).join("");
+    document.getElementById("factorCard").style.display = "block";
+  }
+
+  document.getElementById("recBox").textContent = data.recommendation;
+  document.getElementById("recCard").style.display = "block";
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !document.getElementById("predictBtn").disabled) predict();
+});
+</script>
+</body>
+</html>
