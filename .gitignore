@@ -2,6 +2,7 @@ xgboost_pipeline.pkl
 *.pkl
 *.csv
 *.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
