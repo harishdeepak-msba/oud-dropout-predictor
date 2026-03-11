@@ -353,11 +353,11 @@ async function predict() {
 function renderResult(data) {
   const pct = Math.round(data.dropout_probability * 100);
   const color = data.risk_color;
-  const angle = (data.dropout_probability * 180) - 90;
-  const rad = (angle * Math.PI) / 180;
-  const cx = 90, cy = 90, r = 70;
+  const angleDeg = 180 - (data.dropout_probability * 180);
+  const rad = (angleDeg * Math.PI) / 180;
+  const cx = 90, cy = 90, r = 65;
   const nx = cx + r * Math.cos(rad);
-  const ny = cy + r * Math.sin(rad);
+  const ny = cy - r * Math.sin(rad);
 
   document.getElementById("resultArea").innerHTML = `
     <div class="risk-dial-wrap">
