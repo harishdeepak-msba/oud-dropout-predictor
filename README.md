@@ -125,3 +125,7 @@ curl -X POST http://localhost:8000/predict \
 - **Different feature order?** Update `build_feature_vector()` in `app.py` to match exactly how your notebook preprocessed data before fitting.
 - **Scaling/encoding?** If your pipeline included a scaler or encoder, wrap the model in a `Pipeline` before pickling, or apply transforms in `build_feature_vector()`.
 - **CORS for deployment**: The app allows all origins by default. Restrict this for production.
+
+## Model File
+The trained XGBoost pipeline is not included in this repo.
+Download it here: [xgboost_pipeline.pkl]- https://drive.google.com/file/d/1YeUCJEqPboyYCrb39bAPhWfos_1IjVR-/view?usp=drive_link
