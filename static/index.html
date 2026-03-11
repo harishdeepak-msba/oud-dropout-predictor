@@ -73,7 +73,7 @@
   <header>
     <div class="brand">
       <h1>OUD Dropout <em>Risk</em> Predictor</h1>
-      <p>SAMHSA TEDS-D 2018 · XGBoost Model · Project in Deep Learning</p>
+      <p>SAMHSA TEDS-D 2018 · XGBoost Model · Healthcare Analytics-Deep Learning</p>
     </div>
     <div class="status-badge">
       <span class="status-dot" id="statusDot"></span>
@@ -258,7 +258,7 @@
         <span id="btnText">Generate Dropout Risk Prediction</span>
       </button>
       <div class="error-toast" id="errorToast"></div>
-      <p class="disclaimer">⚠ For research and educational purposes only (Healthcare Analytics Project · Deep Learning course). Not for clinical use.</p>
+      <p class="disclaimer">⚠ For research and educational purposes only (Healthcare Analytics-Deep Learning). Not for clinical use.</p>
     </div>
 
     <!-- RIGHT: Results -->
@@ -287,16 +287,20 @@
 </div>
 
 <script>
-const API = "http://127.0.0.1:8000";
+const API = "https://oud-dropout-predictor.onrender.com";
 
 async function checkHealth() {
+  document.getElementById("statusText").textContent = "waking up server…";
   try {
     const r = await fetch(API + "/health");
     const d = await r.json();
     document.getElementById("statusDot").className = "status-dot live";
     document.getElementById("statusText").textContent = d.model_loaded ? "model loaded" : "demo mode";
   } catch {
-    document.getElementById("statusText").textContent = "api offline";
+    document.getElementById("statusDot").className = "status-dot";
+    document.getElementById("statusText").textContent = "retrying…";
+    // Retry after 15 seconds if server is waking up
+    setTimeout(checkHealth, 15000);
   }
 }
 checkHealth();
@@ -342,7 +346,7 @@ async function predict() {
     renderResult(data);
   } catch (err) {
     errorToast.style.display = "block";
-    errorToast.textContent = "⚠ Could not reach the API. Make sure the backend is running on port 8000.";
+    errorToast.textContent = "⚠ Could not reach the API. The server may be waking up — please wait 30 seconds and try again.";
   } finally {
     btn.disabled = false;
     spinner.style.display = "none";
